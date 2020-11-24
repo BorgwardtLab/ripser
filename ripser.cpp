@@ -175,7 +175,7 @@ void print_simplex(const std::vector<index_t>& s)
   for(auto&& v : s)
   {
     if(!first)
-      std::cout << ",";
+      std::cout << " ";
     else
       first = false;
 
@@ -718,14 +718,13 @@ public:
 
 						pivot = get_pivot(working_coboundary);
 					} else {
-#ifdef PRINT_PERSISTENCE_PAIRS
 						value_t death = get_diameter(pivot);
 						if (death > diameter * ratio) {
+#ifdef PRINT_PERSISTENCE_PAIRS
 #ifdef INDICATE_PROGRESS
 							std::cerr << clear_line << std::flush;
 #endif
 							std::cout << " [" << diameter << "," << death << ")" << std::endl;
-						}
 #endif
 
 #ifdef PRINT_PERSISTENCE_INDICES
@@ -751,6 +750,7 @@ public:
                 vertices_of_destroyer
             );
 #endif
+						}
 
 						pivot_column_index.insert({get_entry(pivot), index_column_to_reduce});
 
