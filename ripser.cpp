@@ -559,12 +559,13 @@ public:
 				auto link = dset.link(u, v);
 
         // v is merged into u, so u is the destroyer and v is the
-        // creator. Technically, (u, v) is the destroyer.
+        // creator. Technically, (u, v) is the destroyer. For the
+        // printing, however, we need to go back to the edge, and
+        // not to the actual connected components.
         if( link )
-					std::cout << " [" << v << "," << u << ")" << std::endl;
+          print_simplex_pair( {vertices_of_edge[1]}, vertices_of_edge);
         else
-					std::cout << " [" << u << "," << v << ")" << std::endl;
-
+          print_simplex_pair( {vertices_of_edge[0]}, vertices_of_edge);
 #else
         // Former functionality; don't use information about the link
         // here.
@@ -726,6 +727,31 @@ public:
 							std::cout << " [" << diameter << "," << death << ")" << std::endl;
 						}
 #endif
+
+#ifdef PRINT_PERSISTENCE_INDICES
+            std::vector<index_t> vertices_of_creator(dim + 1);
+            std::vector<index_t> vertices_of_destroyer(dim + 2);
+
+            get_simplex_vertices(
+              column_to_reduce.second,
+              dim,
+              n,
+              vertices_of_creator.rbegin()
+            );
+
+            get_simplex_vertices(
+              pivot.second,
+              dim + 1,
+              n,
+              vertices_of_destroyer.rbegin()
+            );
+
+            print_simplex_pair(
+                vertices_of_creator,
+                vertices_of_destroyer
+            );
+#endif
+
 						pivot_column_index.insert({get_entry(pivot), index_column_to_reduce});
 
 						while (true) {
