@@ -166,6 +166,38 @@ void set_coefficient(entry_t& e, const coefficient_t c) {}
 
 #endif
 
+void print_simplex(const std::vector<index_t>& s)
+{
+  std::cout << "{";
+
+  bool first = true;
+
+  for(auto&& v : s)
+  {
+    if(!first)
+      std::cout << ",";
+    else
+      first = false;
+
+    std::cout << v;
+  }
+
+  std::cout << "}";
+}
+
+void print_simplex_pair(const std::vector<index_t>& s, const std::vector<index_t>& t)
+{
+  std::cout << "(";
+
+  print_simplex(s);
+
+  std::cout << ",";
+
+  print_simplex(t);
+
+  std::cout << ")" << std::endl;
+}
+
 const entry_t& get_entry(const entry_t& e) { return e; }
 
 typedef std::pair<value_t, index_t> diameter_index_t;
