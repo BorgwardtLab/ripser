@@ -40,6 +40,7 @@
 
 //#define INDICATE_PROGRESS
 #define PRINT_PERSISTENCE_PAIRS
+#define PRINT_PERSISTENCE_INDICES
 
 //#define USE_GOOGLE_HASHMAP
 
@@ -521,7 +522,23 @@ public:
 				if (get_diameter(e) != 0)
 					std::cout << " [0," << get_diameter(e) << ")" << std::endl;
 #endif
-				dset.link(u, v);
+
+#ifdef PRINT_PERSISTENCE_INDICES
+				auto link = dset.link(u, v);
+
+        // v is merged into u, so u is the destroyer and v is the
+        // creator. Technically, (u, v) is the destroyer.
+        if( link )
+					std::cout << " [" << v << "," << u << ")" << std::endl;
+        else
+					std::cout << " [" << u << "," << v << ")" << std::endl;
+
+#else
+        // Former functionality; don't use information about the link
+        // here.
+        dset.link(u, v);
+#endif
+
 			} else
 				columns_to_reduce.push_back(e);
 		}
@@ -531,6 +548,12 @@ public:
 		for (index_t i = 0; i < n; ++i)
 			if (dset.find(i) == i) std::cout << " [0, )" << std::endl;
 #endif
+
+#ifdef PRINT_PERSISTENCE_INDICES
+		for (index_t i = 0; i < n; ++i)
+			if (dset.find(i) == i) std::cout << " [" << i << ", )" << std::endl;
+#endif
+
 	}
 
 	template <typename Column> diameter_entry_t pop_pivot(Column& column) {
