@@ -323,14 +323,33 @@ public:
 		return z;
 	}
 
-	void link(index_t x, index_t y) {
-		if ((x = find(x)) == (y = find(y))) return;
+  /**
+    Links vertex x to vertex y. The *direction* of the merge is shown by
+    the return value of the function. A return value of `true` indicates
+    that the merge was performed 'right to left', i.e. vertex y is now a
+    proper child of vertex x. This is relevant for tracking creators and
+    destroyers correctly.
+  */
+
+	bool link(index_t x, index_t y) {
+
+    // TODO: condition is probably spurious in most cases; maybe
+    // removing it would result in a further speed up?
+		if ((x = find(x)) == (y = find(y))) return false;
+
 		if (rank[x] > rank[y])
+    {
 			parent[y] = x;
+
+      // x is now the parent of y, so the direction of the merge was
+      // right to left.
+      return true;
+    }
 		else {
 			parent[x] = y;
 			if (rank[x] == rank[y]) ++rank[y];
 		}
+    return false;
 	}
 };
 
